@@ -1,0 +1,30 @@
+{
+  "name": "mediajson",
+  "version": "1.0.0",
+  "description": "this node app starts a web server and uses the url to locate a video file for playback and also gets metadata and parses it into json format",
+  "main": "nodeapp.js",
+  "dependencies": {
+    "node-fetch": "^1.6.3",
+    "express": "^4.14.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omarosman107/node.git"
+  },
+  "keywords": [
+    "json",
+    "metadata",
+    "server",
+    "api"
+  ],
+  "author": "Omar Osman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/omarosman107/node/issues"
+  },
+  "homepage": "https://github.com/omarosman107/node#readme"
+}
