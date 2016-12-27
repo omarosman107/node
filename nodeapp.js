@@ -22,7 +22,7 @@ app.get('/', function(req, res) {
       fetch("http://metaframe.digitalsmiths.tv/v2/CWtv/assets/" + stripped + "/partner/154").then(function(response) {
          return response.json()
       }).then(function(data) {
-         useUrl('{videourl: "' + data.videos.variantplaylist.uri + '",ShowName: "' + data.assetFields.seriesName + '",Episode: "' + data.assetFields.title + '",Description: "' + data.assetFields.description + '"}');
+         useUrl('{"videourl": "' + data.videos.variantplaylist.uri + '","ShowName": "' + data.assetFields.seriesName + '","Episode": "' + data.assetFields.title + '","Description": "' + data.assetFields.description + '"}');
       })
    }
    function fetchcbsjson(value) {
@@ -39,7 +39,7 @@ app.get('/', function(req, res) {
       return response.json()
    }).then(function(data) {
       videourl = "https://link.theplatform.com/s/dJ5BDC/media/guid/2198311517/" + searchValue + "?mbr=true&manifest=m3u&form=json"
-      useUrl('{videourl: "' + videourl + '",ShowName: "' + data.query.results.a[0].content + '",Episode: "' + data.query.results.div.content + '",Description: "' + data.query.results.meta.content + '"}');
+      useUrl('{"videourl": "' + videourl + '","ShowName": "' + data.query.results.a[0].content + '","Episode": "' + data.query.results.div.content + '","Description": "' + data.query.results.meta.content + '"}');
    });
 }
    fetch('https://www.googleapis.com/customsearch/v1element?key=AIzaSyCVAXiUzRYsML1Pv6RwSG1gunmMikTzQqY&sig=0c3990ce7a056ed50667fe0c3873c9b6&cx=009916453314335219988:-0yvqrz4snu&q=' + req.url.split('=')[1]).then(function(response) {
