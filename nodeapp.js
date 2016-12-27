@@ -22,7 +22,7 @@ app.get('/', function(req, res) {
 
 function fetchcwjson(value) {
       var videolink
-      var stripped = value.split('?')[1].split("=")[1]
+      var stripped = value.split("=")[1]
       fetch("http://metaframe.digitalsmiths.tv/v2/CWtv/assets/" + stripped + "/partner/154").then(function(response) {
          return response.json()
       }).then(function(data) {
