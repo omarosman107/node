@@ -13,6 +13,8 @@ app.get('/', function(req, res) {
    console.log('User Is connecting')
    console.log(req.query.show)
    res.set('Content-Type', 'application/json');
+res.setHeader('Cache-Control', 'public, max-age=31557600');
+
 
    function useUrl(url) {
       res.send(url);
