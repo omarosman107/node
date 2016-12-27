@@ -3,6 +3,7 @@ var express = require('express');
 var fetch = require('node-fetch');
 var app = express();
 
+var isDone = false
 
 
 //Lets define a port we want to listen to
@@ -10,13 +11,16 @@ const PORT = process.env.PORT || 8080;
 //We need a function which handles requests and send response
 app.get('/', function(req, res) {
    console.log('User Is connecting')
+   console.log(req.query.show)
    res.set('Content-Type', 'application/json');
 
    function useUrl(url) {
       res.send(url);
    }
 
-   function fetchcwjson(value) {
+
+
+function fetchcwjson(value) {
       var videolink
       var stripped = value.split('?')[1].split("=")[1]
       fetch("http://metaframe.digitalsmiths.tv/v2/CWtv/assets/" + stripped + "/partner/154").then(function(response) {
@@ -42,7 +46,51 @@ app.get('/', function(req, res) {
       useUrl('{"videourl": "' + videourl + '","ShowName": "' + data.query.results.a[0].content + '","Episode": "' + data.query.results.div.content + '","Description": "' + data.query.results.meta.content + '"}');
    });
 }
-   fetch('https://www.googleapis.com/customsearch/v1element?key=AIzaSyCVAXiUzRYsML1Pv6RwSG1gunmMikTzQqY&sig=0c3990ce7a056ed50667fe0c3873c9b6&cx=009916453314335219988:-0yvqrz4snu&q=' + req.url.split('=')[1]).then(function(response) {
+   
+
+if (req.query.show.includes('cw')) {
+fetchcwjson(req.query.show)
+   isDone = true
+}
+if (req.query.show.includes('cbs')) {
+fetchcbsjson(req.query.show)
+   isDone = true
+}
+if (req.query.show.includes('abc')) {
+fetchabcjson(req.query.show)
+   isDone = true
+}
+if (req.query.show.includes('fox')) {
+fetchfoxjson(req.query.show)
+   isDone = true
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if (isDone == false) {googleAPI(req.query.show);}
+});
+app.listen(PORT);
+console.log("Web Server Started On Port:" + PORT);
+
+
+
+
+
+   function googleAPI(value){
+fetch('https://www.googleapis.com/customsearch/v1element?key=AIzaSyCVAXiUzRYsML1Pv6RwSG1gunmMikTzQqY&sig=0c3990ce7a056ed50667fe0c3873c9b6&cx=009916453314335219988:-0yvqrz4snu&q=' + value).then(function(response) {
       return response.json()
    }).then(function(googlejson) {
       googleurl = googlejson.results[0].unescapedUrl;
@@ -88,6 +136,4 @@ app.get('/', function(req, res) {
          fetchfoxjson(foxurl)
       }
    })
-});
-app.listen(PORT);
-console.log("Web Server Started On Port:" + PORT);
+}
