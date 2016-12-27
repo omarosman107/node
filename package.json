@@ -4,8 +4,8 @@
   "description": "this node app starts a web server and uses the url to locate a video file for playback and also gets metadata and parses it into json format",
   "main": "nodeapp.js",
   "dependencies": {
-    "node-fetch": "^1.6.3",
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "node-fetch": "^1.6.3"
   },
   "devDependencies": {},
   "scripts": {
