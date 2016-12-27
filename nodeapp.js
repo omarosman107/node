@@ -6,9 +6,10 @@ var app = express();
 
 
 //Lets define a port we want to listen to
-const PORT = 80;
+const PORT = 8080;
 //We need a function which handles requests and send response
 app.get('/', function(req, res) {
+   console.log('User Is connecting')
    res.set('Content-Type', 'application/json');
 
    function useUrl(url) {
@@ -89,4 +90,4 @@ app.get('/', function(req, res) {
    })
 });
 app.listen(PORT);
-console.log("Web Server Started On Port:" + PORT)
+console.log("Web Server Started On Port:" + PORT);
