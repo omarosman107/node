@@ -6,7 +6,7 @@ var app = express();
 
 
 //Lets define a port we want to listen to
-const PORT = 8080;
+const PORT = 80;
 //We need a function which handles requests and send response
 app.get('/', function(req, res) {
    res.set('Content-Type', 'application/json');
