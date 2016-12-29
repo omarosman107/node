@@ -9,9 +9,9 @@ var isDone = false
 //Lets define a port we want to listen to
 const PORT = process.env.PORT || 8080;
 //We need a function which handles requests and send response
-app.get('/', function(req, res) {
+app.get('/show', function(req, res) {
    console.log('User Is connecting')
-   console.log(req.query.show)
+   console.log(req.query.name)
    res.setHeader('Content-Type', 'application/json');
    res.setHeader('Cache-Control', 'public, max-age=31557600');
 
@@ -19,7 +19,6 @@ app.get('/', function(req, res) {
    function useUrl(url) {
       res.send(url);
    }
-
 
 
 function fetchcwjson(value) {
@@ -50,20 +49,20 @@ function fetchcwjson(value) {
 }
    
 
-if (req.query.show.includes('cw')) {
-fetchcwjson(req.query.show)
+if (req.query.name.includes('cw')) {
+fetchcwjson(req.query.name)
    isDone = true
 }
-if (req.query.show.includes('cbs')) {
-fetchcbsjson(req.query.show)
+if (req.query.name.includes('cbs')) {
+fetchcbsjson(req.query.name)
    isDone = true
 }
-if (req.query.show.includes('abc')) {
-fetchabcjson(req.query.show)
+if (req.query.name.includes('abc')) {
+fetchabcjson(req.query.name)
    isDone = true
 }
-if (req.query.show.includes('fox')) {
-fetchfoxjson(req.query.show)
+if (req.query.name.includes('fox')) {
+fetchfoxjson(req.query.name)
    isDone = true
 }
 
@@ -82,7 +81,7 @@ fetchfoxjson(req.query.show)
 
 
 
-if (isDone == false) {googleAPI(req.query.show);}
+if (isDone == false) {googleAPI(req.query.name);}
 });
 app.listen(PORT);
 console.log("Web Server Started On Port:" + PORT);
