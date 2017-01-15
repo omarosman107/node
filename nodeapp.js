@@ -1,17 +1,29 @@
 //Lets require/import the HTTP module
 var express = require('express');
 var fetch = require('node-fetch');
+var request = require('request')
+
+
 var app = express();
 
 var isDone = false
+var foxurl
+var cwurl
+var url
+
 
 
 //Lets define a port we want to listen to
 const PORT = process.env.PORT || 8080;
 //We need a function which handles requests and send response
+
 app.get('/show', function(req, res) {
+
+     var showname = req._parsedUrl.query
+
    console.log('User Is connecting')
-   console.log(req.query.name)
+        console.log(showname)
+
    res.setHeader('Content-Type', 'application/json');
    res.setHeader('Cache-Control', 'public, max-age=31557600');
 
@@ -20,13 +32,13 @@ app.get('/show', function(req, res) {
       res.send(url);
    }
 
-
 function fetchcwjson(value) {
       var videolink
       var stripped = value.split("=")[1]
       fetch("http://metaframe.digitalsmiths.tv/v2/CWtv/assets/" + stripped + "/partner/154").then(function(response) {
          return response.json()
       }).then(function(data) {
+
          useUrl('{"videourl": "' + data.videos.variantplaylist.uri + '","ShowName": "' + data.assetFields.seriesName + '","Episode": "' + data.assetFields.title + '","Description": "' + data.assetFields.description + '"}');
       })
    }
@@ -47,23 +59,56 @@ function fetchcwjson(value) {
       useUrl('{"videourl": "' + videourl + '","ShowName": "' + data.query.results.a[0].content + '","Episode": "' + data.query.results.div.content + '","Description": "' + data.query.results.meta.content + '"}');
    });
 }
+function fetchfoxjson(value) {
+   var epiname
+      // url (required), options (optional)
+   fetch("https://feed.theplatform.com/f/fox.com/fullepisodes?form=json&range=1-1&byCustomValue={fox:freewheelId}{" + value.split('watch/')[1].split("/")[0] + "}", {
+      method: 'get'
+   }).then(function(response) {
+      return response.json()
+   }).then(function(data) {
+epiname = (data.entries["0"].title)
+
+         // url (required), options (optional)
+      fetch('https://feed.theplatform.com/f/fox.com/metadata?count=true&byCustomValue={fullEpisode}{true}&range=0-1&q=' + epiname, {
+         method: 'get'
+      }).then(function(response) {
+         return response.json()
+      }).then(function(final) {
+   useUrl('{"videourl": "' + final.results["0"].videoURL.split('?')[0] + "?mbr=true&manifest=m3u&metafile=false" + '","ShowName": "' + data.entries["0"].fox$series + '","Episode": "' + epiname + '","Description": "' + data.entries["0"].description + '"}');
+ })
+  
+   })
+
+}
    
 
-if (req.query.name.includes('cw')) {
-fetchcwjson(req.query.name)
-   isDone = true
+var sitefunctions = {
+
+"cwtv.com":"fetchcwjson(url)",
+"diziay.com":"fetchdiziayjson(url)",
+"adultswim.com":"fetchaswimjson(url)",
+"cwseed.com":"fetchcwjson(url)",
+"nick.com":"fetchnickjson(url)",
+"abc.go.com":"fetchabcjson(url)",
+"southpark.com":"fetchsouthpjson(url)",
+"amc.com":"fetchamcjson(url)",
+"cbs.com":"fetchcbsjson(url)",
+"nbc.com":"fetchnbcjson(url)",
+"fox.com":"fetchfoxjson(url)"
+
+
+
+
 }
-if (req.query.name.includes('cbs')) {
-fetchcbsjson(req.query.name)
-   isDone = true
-}
-if (req.query.name.includes('abc')) {
-fetchabcjson(req.query.name)
-   isDone = true
-}
-if (req.query.name.includes('fox')) {
-fetchfoxjson(req.query.name)
-   isDone = true
+for (tv in sitefunctions) {
+
+      if (showname.includes(tv)) {
+console.log(tv + " "+"Detected")
+url = showname
+             eval(sitefunctions[tv]);
+             isDone = true
+} 
 }
 
 
@@ -75,13 +120,7 @@ fetchfoxjson(req.query.name)
 
 
 
-
-
-
-
-
-
-if (isDone == false) {googleAPI(req.query.name);}
+if (isDone == false) {googleAPI(showname);}
 });
 app.listen(PORT);
 console.log("Web Server Started On Port:" + PORT);
@@ -95,46 +134,72 @@ fetch('https://www.googleapis.com/customsearch/v1element?key=AIzaSyCVAXiUzRYsML1
       return response.json()
    }).then(function(googlejson) {
       googleurl = googlejson.results[0].unescapedUrl;
+      console.log(googleurl)
       foxurl = googlejson.results[0].unescapedUrl
-      for (var i = 0; i < googlejson.results.length; i++) {
-         if (typeof googlejson.results[i].richSnippet != "undefined") {
-            if (googlejson.results[i].richSnippet.metatags.ogType == "video.episode") {
-               console.log(googlejson.results[i].richSnippet.metatags.ogType)
-               foxurl = googlejson.results[i].unescapedUrl
-            }
-         }
-      }
-      if (googlejson.results[0].unescapedUrl.includes("cwtv")) {
-         console.log(googlejson.results["0"].richSnippet.metatags.ogUrl)
-         cwurl = googlejson.results["0"].richSnippet.metatags.ogUrl
-      }
-      if (googleurl.includes("cw")) {
-         console.log(" CW Detected")
-         fetchcwjson(googleurl)
-      }
-      if (googleurl.includes("abc")) {
-         console.log(" ABC Detected")
-         fetchabcjson(googleurl)
-      }
-      if (googleurl.includes("nbc")) {
-         console.log(" NBC Detected")
-         fetchnbcjson(googleurl)
-      }
-      if (googleurl.includes("southpark")) {
-         console.log(" South Park Detected")
-         fetchsouthpjson(googleurl)
-      }
-      if (googleurl.includes("nick")) {
-         console.log(" Nickelodeon Detected")
-         fetchnickjson(googleurl)
-      }
-      if (googleurl.includes("cbs")) {
-         console.log(" CBS Detected")
-         fetchcbsjson(googleurl)
-      }
-      if (googleurl.includes("fox")) {
-         console.log("Fox Detected")
-         fetchfoxjson(foxurl)
-      }
+            cwurl = googlejson.results[0].unescapedUrl
+
+
+          for (var i = 0; i < googlejson.results.length; i++) {
+
+
+
+
+
+
+if (JSON.stringify(googlejson.results[i]).includes('ogType')) {
+  if (googlejson.results[i].richSnippet.metatags.ogType == "video.episode") {
+                console.log("worked")
+
+
+              foxurl = googlejson.results[i].unescapedUrl;
+                            cwurl = foxurl
+
+              if (foxurl.includes('fox.com')) {
+console.log(foxurl)
+
+              }
+           
+
+if (JSON.stringify(googlejson.results[i]).includes('ogUrl')) {
+   console.log("worked")
+
+              cwurl = googlejson.results[i].richSnippet.metatags.ogUrl
+             
+}
+
+
+             }
+
+
+
+
+
+
+}
+
+
+
+}
+
+
+      for (tv in sitefunctions) {
+url = googleurl
+ if (url.includes(tv)) {
+console.log(tv + " "+"Detected")
+
+if (tv == "cwtv.com") {
+   url = cwurl
+
+}
+if (tv == "fox.com") {
+   url = foxurl
+
+}
+
+             eval(sitefunctions[tv]);
+             isDone = true
+
+} 
+}
    })
 }
