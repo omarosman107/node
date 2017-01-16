@@ -1,7 +1,6 @@
 //Lets require/import the HTTP module
 var express = require('express');
 var fetch = require('node-fetch');
-var request = require('request')
 
 
 var app = express();
@@ -80,6 +79,16 @@ epiname = (data.entries["0"].title)
   
    })
 
+
+
+         // url (required), options (optional)
+      fetch(value, {
+         method: 'get'
+      }).then(function(response) {
+         return response.text()
+      }).then(function(data) {
+   useUrl('{"videourl": "' + final.results["0"].videoURL.split('?')[0] + "?mbr=true&manifest=m3u&metafile=false" + '","ShowName": "' + data.entries["0"].fox$series + '","Episode": "' + epiname + '","Description": "' + data.entries["0"].description + '"}');
+ })
 }
    
 
