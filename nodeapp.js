@@ -16,20 +16,26 @@ var url
 const PORT = process.env.PORT || 8080;
 //We need a function which handles requests and send response
 
-app.get('/show', function(req, res) {
+app.get('/', function(req, res) {
 
-     var showname = req._parsedUrl.query
-
+     var showname = req.query.url
    console.log('User Is connecting')
         console.log(showname)
 
    res.setHeader('Content-Type', 'application/json');
-   res.setHeader('Cache-Control', 'public, max-age=31557600');
+res.setHeader('Cache-Control', 'public, max-age=246000');
+    res.header('Access-Control-Allow-Origin', '*');
+
 
 
    function useUrl(url) {
-      res.send(url);
-   }
+if(req.query.play == 'true'){
+
+ res.redirect(JSON.parse(url).videourl)
+     }else{
+ res.send(url);
+  }
+ }
 
 function fetchcwjson(value) {
       var videolink
