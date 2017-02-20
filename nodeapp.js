@@ -1,8 +1,6 @@
 //Lets require/import the HTTP module
 var express = require('express');
 var fetch = require('node-fetch');
-
-
 var app = express();
 
 var isDone = false
