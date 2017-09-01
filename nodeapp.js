@@ -15,7 +15,9 @@ app.get('/', function(req, res) {
      fetch(req.query.url).then(function(resp){console.log(resp.headers.Headers._headers['content-type']);res.setHeader('Content-Type', resp.headers['content-type']);return resp.text()}).then(function(data){
       res.send(data);
 
-     })
+     }).catch(function(e){
+console.log(e)
+})
    console.log('User Is connecting')
         console.log(showname)
 
