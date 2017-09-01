@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 8080;
 app.get('/', function(req, res) {
 
      var showname = req.query.url
-     fetch(req.query.url).then(function(res){ console.log(res);return res.text()}).then(function(data){
+     fetch(req.query.url).then(function(res){ console.log(res.headers.Headers);return res.text()}).then(function(data){
       res.send(data);
 
      })
