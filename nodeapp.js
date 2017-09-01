@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 8080;
 app.get('/', function(req, res) {
 
      var showname = req.query.url
-     fetch(req.query.url).then(function(resp){console.log(resp.headers);res.setHeader('Content-Type', resp.headers['content-type']);return resp.text()}).then(function(data){
+     fetch(req.query.url).then(function(resp){console.log(resp.headers.Headers._headers['content-type']);res.setHeader('Content-Type', resp.headers['content-type']);return resp.text()}).then(function(data){
       res.send(data);
 
      })
