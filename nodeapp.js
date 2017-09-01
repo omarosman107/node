@@ -3,11 +3,6 @@ var express = require('express');
 var fetch = require('node-fetch');
 var app = express();
 
-var isDone = false
-var foxurl
-var cwurl
-var url
-
 
 
 //Lets define a port we want to listen to
@@ -17,7 +12,7 @@ const PORT = process.env.PORT || 8080;
 app.get('/', function(req, res) {
 
      var showname = req.query.url
-     fetch(req.query.url).then(function(res){   res.setHeader('Content-Type', res.headers['content-type']);return res.text()}).then(function(data){
+     fetch(req.query.url).then(function(resp){   res.setHeader('Content-Type', res.headers['content-type']);return resp.text()}).then(function(data){
       res.send(data);
 
      })
