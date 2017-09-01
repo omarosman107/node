@@ -30,4 +30,7 @@ res.setHeader('Cache-Control', 'public, max-age=246000');
 
 
    })
-}
+app.listen(PORT);
+console.log("Web Server Started On Port:" + PORT);
+
+
